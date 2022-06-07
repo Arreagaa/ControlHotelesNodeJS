@@ -1,0 +1,30 @@
+{
+  "name": "controlhotelesnodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crivas-2020025/ControlHotelesNodeJS.git"
+  },
+  "author": "Grupo-4",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/crivas-2020025/ControlHotelesNodeJS/issues"
+  },
+  "homepage": "https://github.com/crivas-2020025/ControlHotelesNodeJS#readme",
+  "dependencies": {
+    "bcrypt-nodejs": "^0.0.3",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.29.3",
+    "mongoose": "^6.3.6",
+    "nodemon": "^2.0.16",
+    "start": "^5.1.0"
+  }
+}
