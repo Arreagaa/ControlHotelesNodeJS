@@ -1,4 +1,4 @@
-//UsuarioController = require('./src/controllers/usuario.controller');
+UsuarioController = require('./src/controllers/usuario.controller');
 const mongoose = require('mongoose');
 const app = require('./app');
 
@@ -9,6 +9,6 @@ mongoose.connect('mongodb://localhost:27017/ControlHoteles', { useNewUrlParser: 
     app.listen(3000, function () {
     })
     
-    //UsuarioController.RegistrarAdmin();
+    UsuarioController.RegistrarAdmin();
 
 }).catch(error => console.log(error));

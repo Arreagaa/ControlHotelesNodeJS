@@ -4,8 +4,8 @@ exports.verAdmin = function (req, res, next) {
     next();
 };
   
-exports.verEmpresa = function (req, res, next) {
-    if (req.user.rol !== "ROL_EMPRESA")
+exports.verHotel = function (req, res, next) {
+    if (req.user.rol !== "ROL_HOTEL")
       return res.status(403).send({ mesnaje: "Sin permisos" });
     next();
 };
