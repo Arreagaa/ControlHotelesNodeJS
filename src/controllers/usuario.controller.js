@@ -4,16 +4,6 @@ const jwt = require('../services/jwt');
 const usuarioModel = require('../models/usuario.model');
 
 // BUSQUEDAS
-function ObtenerHoteles (req, res) {
-
-    Usuarios.find((err, hotelesObtenidos) => {
-        
-        if (err) return res.send({ mensaje: "Error: " + err })
-
-        return res.send({ usuarios: hotelesObtenidos })
-    })
-}
-
 function ObtenerClientes (req, res) {
 
     Usuarios.find((err, ClientesObtenidos) => {
@@ -21,18 +11,6 @@ function ObtenerClientes (req, res) {
         if (err) return res.send({ mensaje: "Error: " + err })
 
         return res.send({ usuarios: ClientesObtenidos })
-    })
-}
-
-
-function ObtenerHotelId(req, res){
-    var idHotel = req.params.idHotel
-
-    Usuarios.findById(idHotel,(err,hotelEncontrado)=>{
-        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
-        if (!hotelEncontrado) return res.status(404).send( { mensaje: 'Error al obtener la Empresa' });
-
-        return res.status(200).send({ usuarios: hotelEncontrado });
     })
 }
 
@@ -95,37 +73,6 @@ function RegistrarAdmin(req, res){
     })
 }
 
-function registrarHotel(req, res){
-    var parametros = req.body;
-    var usuariosModel = new Usuarios();
-  
-    if(parametros.nombre, parametros.email, parametros.direccion, parametros.pais){
-        usuariosModel.nombre = parametros.nombre;
-        usuariosModel.email =  parametros.email;
-        usuariosModel.direccion = parametros.direccion;
-        usuariosModel.pais = parametros.pais;
-        usuariosModel.rol = 'ROL_HOTEL';
-            Usuarios.find({nombre: parametros.nombre}
-                ,(err, empresaGuardada)=>{
-                if(empresaGuardada.length == 0){
-                    bcrypt.hash(parametros.password, null,null, (err, passwordEncriptada)=>{
-                        usuariosModel.password = passwordEncriptada;
-                        usuariosModel.save((err, empGuardada) => {
-                            if(err) return res.status(500).send({mensaje: 'No se realizo la accion'});
-                            if(!empGuardada) return res.status(404).send({mensaje: 'No se agrego el hotel'});
-  
-                            return res.status(201).send({usuarios: empGuardada});
-                         })
-                    })
-                }else{
-                    return res.status(500).send({ mensaje: 'Error en la peticion' });
-                }
-            })
-        }else{
-            return res.status(500).send({ mensaje: 'Error en la peticion agregar' });
-        }
-}
-
 function registrarCliente(req, res){
     var parametros = req.body;
     var usuariosModel = new Usuarios();
@@ -156,33 +103,6 @@ function registrarCliente(req, res){
         return res.status(500).send({ mensaje: 'Error en la peticion agregar' });
     }
 }
-
-function editarHotel(req, res){
-    var idHotel = req.params.idHotel;
-    var paramentros = req.body;
-
-        Usuarios.findByIdAndUpdate({_id: idHotel, nombre: paramentros.nombre,email: paramentros.email, password: paramentros.password, rol: paramentros.rol}, paramentros,{new:true},
-            (err, hotelEditado)=>{
-                if(err) return res.status(500).send({mensaje: 'Error en la peticion'});
-                if(!hotelEditado) return res.status(400).send({mensaje: 'No se puede ediar el hotel'});
-                
-                return res.status(200).send({usuarios: hotelEditado});
-            })
-}
-
-
-function eliminarHotel(req, res){
-    var idHotel = req.params.idHotel;
-
-    Usuarios.findByIdAndDelete({_id: idHotel},(err, hotelEliminado)=>{
-                
-        if(err) return res.status(500).send({mensaje: 'Error en la peticion'});
-            if(!hotelEliminado) return res.status(400).send({mensaje: 'No es puede eliminar la empresa'});
-                
-            return res.status(200).send({usuarios: hotelEliminado});
-        })
-}
-
 
 
 //EDITAR PERFIL DEL USUARIO
@@ -215,13 +135,8 @@ function EliminarClientePerfil(req, res){
 module.exports = {
     login,
     RegistrarAdmin,
-    registrarHotel,
-    editarHotel,
-    eliminarHotel,
-    ObtenerHoteles,
     ObtenerClientes,
     registrarCliente,
-    ObtenerHotelId,
     ObtenerClienteId,
     EditarClientePerfil,
     EliminarClientePerfil
