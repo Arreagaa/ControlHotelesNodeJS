@@ -1,4 +1,3 @@
-const Usuarios = require('../models/usuario.model');
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
 const Hoteles = require('../models/hotel.model');
@@ -10,7 +9,7 @@ function ObtenerHoteles (req, res) {
         
         if (err) return res.send({ mensaje: "Error: " + err })
 
-        return res.send({ usuarios: hotelesObtenidos })
+        return res.send({ hoteles: hotelesObtenidos })
     })
 }
 
@@ -21,7 +20,7 @@ function ObtenerHotelId(req, res){
         if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
         if (!hotelEncontrado) return res.status(404).send( { mensaje: 'Error al obtener la Empresa' });
 
-        return res.status(200).send({ usuarios: hotelEncontrado });
+        return res.status(200).send({ hoteles: hotelEncontrado });
     })
 }
 
