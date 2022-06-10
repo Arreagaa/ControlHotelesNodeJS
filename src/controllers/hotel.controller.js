@@ -27,7 +27,7 @@ function ObtenerHotelId(req, res){
 
 function agregarHotel(req, res){
     var parametros = req.body;
-    var hotelModel = new Usuarios();
+    var hotelModel = new Hoteles();
   
     if(parametros.nombreHotel, parametros.email, parametros.direccion, parametros.telefono, parametros.pais){
         hotelModel.nombreHotel = parametros.nombreHotel;
