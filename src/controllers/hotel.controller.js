@@ -28,7 +28,7 @@ function agregarHotel(req, res){
     var parametros = req.body;
     var hotelModel = new Hoteles();
   
-    if(parametros.nombreHotel, parametros.email, parametros.direccion, parametros.telefono, parametros.pais){
+    if(parametros.nombreHotel, parametros.email, parametros.direccion, parametros.telefono, parametros.pais, parametros.precioHabitacion){
         hotelModel.nombreHotel = parametros.nombreHotel;
         hotelModel.email = parametros.email;
         hotelModel.direccion = parametros.direccion;
