@@ -35,7 +35,7 @@ function agregarHotel(req, res){
         hotelModel.telefono = parametros.telefono;
         hotelModel.pais = parametros.pais;
         hotelModel.precioHabitacion = parametros.precioHabitacion;
-        hotelModel.idAdmin = parametros.idAdmin;
+        hotelModel.idAdmin = req.user.sub;
             Hoteles.find({nombreHotel: parametros.nombreHotel}
                 ,(err, empresaGuardada)=>{
                 if(empresaGuardada.length == 0){
