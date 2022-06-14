@@ -57,6 +57,8 @@ function RegistrarAdmin(req, res){
     var usuariosModel = new Usuarios();   
     usuariosModel.nombre = 'superAdmin';
     usuariosModel.email = 'Admin@gmail.com';
+    usuariosModel.direccion = '6A Avenida 13-54';
+    usuariosModel.pais = 'Guatemala';
     usuariosModel.rol = 'ROL_ADMINISTRADOR';
 
     Usuarios.find({ nombre: 'superAdmin', email: 'Admin@gmail.com'}, (err, usuarioEncontrato) => {
