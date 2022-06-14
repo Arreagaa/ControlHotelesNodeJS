@@ -15,5 +15,7 @@ api.get('/obtenerClienteId/:idCliente',[md_autentificacion.Auth],usuarioControll
 //CLIENTE PERFIL
 api.put('/editarClientePerfil/:idUsuario',[md_autentificacion.Auth, md_roles.verCliente],usuarioController.EditarClientePerfil);
 api.delete('/eliminarClientePerfil/:idUsuario', [md_autentificacion.Auth, md_roles.verCliente],usuarioController.EliminarClientePerfil);
+/*ADMINISTRACION CLIENTES*/
+api.put('/editarClienteRol/:idUsuario',[md_autentificacion.Auth, md_roles.verAdmin],usuarioController.EditarClienteRol);
 
 module.exports = api;

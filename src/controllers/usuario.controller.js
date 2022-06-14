@@ -133,6 +133,21 @@ function EliminarClientePerfil(req, res){
     })
 }
 
+/*ADMINISTRACION CLIENTES*/
+//EDITAR ROL DEL USUARIO
+function EditarClienteRol(req, res){
+    var idUsuario = req.params.idUsuario;
+    var paramentros = req.body;
+    
+        Usuarios.findByIdAndUpdate({_id: idUsuario}, paramentros,{new:true},(err, clientePerfilEditado)=>{
+            if(err) return res.status(500).send({mensaje: 'Error en la peticion'});
+                if(!clientePerfilEditado) return res.status(400).send({mensaje: 'No se puedo editar el perfil de usuario'});
+                
+                return res.status(200).send({usuarios: clientePerfilEditado});
+            })
+
+}
+
 
 module.exports = {
     login,
@@ -141,5 +156,6 @@ module.exports = {
     registrarCliente,
     ObtenerClienteId,
     EditarClientePerfil,
-    EliminarClientePerfil
+    EliminarClientePerfil,
+    EditarClienteRol
 }
