@@ -5,7 +5,7 @@ var roomSchema = Schema ({
     nombreRoom: String,
     tipo:String,
     precio: Number,
-    disponibilidad: boolean,
+    disponibilidad: Number,
     idHotel:{type:Schema.Types.ObjectId, ref:'hoteles'}
 });
 
