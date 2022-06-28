@@ -18,7 +18,7 @@ function ObtenerHotelId(req, res){
 
     Hoteles.findById(idHotel,(err,hotelEncontrado)=>{
         if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
-        if (!hotelEncontrado) return res.status(404).send( { mensaje: 'Error al obtener el hotel' });
+        if (!hotelEncontrado) return res.status(404).send( { mensaje: 'Error al obtener la Empresa' });
 
         return res.status(200).send({ hoteles: hotelEncontrado });
     })
