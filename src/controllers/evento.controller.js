@@ -1,49 +1,46 @@
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
-const Hoteles = require('../models/hotel.model');
+const Eventos = require('../models/evento.model');
 
 
-function ObtenerHoteles (req, res) {
+function ObtenerEventos (req, res) {
 
-    Hoteles.find((err, hotelesObtenidos) => {
+    Eventos.find((err, eventosObtenidos) => {
         
         if (err) return res.send({ mensaje: "Error: " + err })
 
-        return res.send({ hoteles: hotelesObtenidos })
+        return res.send({ eventos: eventosObtenidos })
     })
 }
 
-function ObtenerHotelId(req, res){
-    var idHotel = req.params.idHotel
+function ObtenerEventolId(req, res){
+    var idEvento = req.params.idEvento
 
-    Hoteles.findById(idHotel,(err,hotelEncontrado)=>{
+    Eventos.findById(idEvento,(err, eventoEncontrado)=>{
         if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
-        if (!hotelEncontrado) return res.status(404).send( { mensaje: 'Error al obtener la Empresa' });
+        if (!eventoEncontrado) return res.status(404).send( { mensaje: 'Error al obtener el Evento' });
 
-        return res.status(200).send({ hoteles: hotelEncontrado });
+        return res.status(200).send({ eventos: eventoEncontrado });
     })
 }
 
-function agregarHotel(req, res){
+function agregarEvento(req, res){
     var parametros = req.body;
-    var hotelModel = new Hoteles();
+    var eventoModel = new Eventos();
   
-    if(parametros.nombreHotel, parametros.email, parametros.direccion, parametros.telefono, parametros.pais, parametros.precioHabitacion){
-        hotelModel.nombreHotel = parametros.nombreHotel;
-        hotelModel.email = parametros.email;
-        hotelModel.direccion = parametros.direccion;
-        hotelModel.telefono = parametros.telefono;
-        hotelModel.pais = parametros.pais;
-        hotelModel.precioHabitacion = parametros.precioHabitacion;
-        hotelModel.idAdmin = req.user.sub;
-            Hoteles.find({nombreHotel: parametros.nombreHotel}
-                ,(err, empresaGuardada)=>{
-                if(empresaGuardada.length == 0){
-                        hotelModel.save((err, hotelGuardado) => {
+    if(parametros.evento, parametros.descripcion){
+        eventoModel.evento = parametros.evento;
+        eventoModel.descripcion = parametros.descripcion;
+        eventoModel.precio = parametros.precio;
+        eventoModel.idHotel = parametros.idHotel;
+            Eventos.find({evento: parametros.evento}
+                ,(err, eventoGuardado)=>{
+                if(eventoGuardado.length == 0){
+                    eventoModel.save((err, eventosGuardado) => {
                             if(err) return res.status(500).send({mensaje: 'No se realizo la accion'});
-                            if(!hotelGuardado) return res.status(404).send({mensaje: 'No se agrego el hotel'});
+                            if(!eventosGuardado) return res.status(404).send({mensaje: 'No se agrego el evento'});
   
-                            return res.status(201).send({hoteles: hotelGuardado});
+                            return res.status(201).send({eventos: eventosGuardado});
                          })
                 }else{
                     return res.status(500).send({ mensaje: 'Error en la peticion' });
@@ -54,37 +51,36 @@ function agregarHotel(req, res){
         }
 }
 
-function editarHotel(req, res){
-    var idHotel = req.params.idHotel;
+function editarEvento(req, res){
+    var idEvento = req.params.idEvento;
     var paramentros = req.body;
 
-    Hoteles.findByIdAndUpdate({_id: idHotel, nombre: paramentros.nombre}, paramentros,{new:true},
-        (err, hotelEditado)=>{
+    Eventos.findByIdAndUpdate({_id: idEvento, evento: paramentros.evento}, paramentros,{new:true},
+        (err, eventoEditado)=>{
             if(err) return res.status(500).send({mensaje: 'Error en la peticion'});
-            if(!hotelEditado) return res.status(400).send({mensaje: 'No se puede editar el hotel'});
+            if(!eventoEditado) return res.status(400).send({mensaje: 'No se puede editar el evento'});
                 
-            return res.status(200).send({hoteles: hotelEditado});
+            return res.status(200).send({eventos: eventoEditado});
     })
 }
 
+function eliminarEvento(req, res){
+    var idEvento = req.params.idEvento;
 
-function eliminarHotel(req, res){
-    var idHotel = req.params.idHotel;
-
-    Hoteles.findByIdAndDelete({_id: idHotel},(err, hotelEliminado)=>{
+    Eventos.findByIdAndDelete({_id: idEvento},(err, eventoEliminado)=>{
                 
         if(err) return res.status(500).send({mensaje: 'Error en la peticion'});
-            if(!hotelEliminado) return res.status(400).send({mensaje: 'No es puede eliminar el hotel'});
+            if(!eventoEliminado) return res.status(400).send({mensaje: 'No es puede eliminar el evento'});
                 
-            return res.status(200).send({hoteles: hotelEliminado});
+            return res.status(200).send({eventos: eventoEliminado});
         })
 }
 
 
 module.exports = {
-    agregarHotel,
-    editarHotel,
-    eliminarHotel,
-    ObtenerHoteles,
-    ObtenerHotelId,
+    agregarEvento,
+    editarEvento,
+    eliminarEvento,
+    ObtenerEventos,
+    ObtenerEventolId,
 }

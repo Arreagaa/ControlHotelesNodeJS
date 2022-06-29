@@ -7,6 +7,7 @@ var app = express();
 const UsuarioRutas = require('./src/routes/usuario.routes');
 const HotelesRutas = require('./src/routes/hotel.routes');
 const RoomRutas = require('./src/routes/room.routes');
+const EventoRutas = require('./src/routes/evento.routes');
 
 // MIDDLEWARES -> INTERMEDIARIOS
 app.use(express.urlencoded({ extended: false }));
@@ -16,6 +17,6 @@ app.use(express.json());
 app.use(cors());
 
 // CARGA DE RUTAS localhost:3000/api/obtenerProductos
-app.use('/api', UsuarioRutas, HotelesRutas, RoomRutas);
+app.use('/api', UsuarioRutas, HotelesRutas, RoomRutas, EventoRutas);
 
 module.exports = app;
