@@ -33,7 +33,7 @@ function agregarRoom(req, res){
         roomModel.tipo = parametros.tipo;
         roomModel.precio = parametros.precio;
         roomModel.disponibilidad = parametros.disponibilidad;
-        roomModel.idHotel = req.user.sub;
+        roomModel.idHotel = parametros.idHotel;
             Room.find({nombreRoom: parametros.nombreRoom}
                 ,(err, roomGuardado)=>{
                 if(roomGuardado.length == 0){
