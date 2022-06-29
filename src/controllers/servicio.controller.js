@@ -29,7 +29,7 @@ function agregarServicio(req, res){
     var servicioModel = new Servicios();
   
     if(parametros.servicio, parametros.precio){
-        servicioModel.servicio = parametros.evento;
+        servicioModel.servicio = parametros.servicio;
         servicioModel.precio = parametros.precio;
         servicioModel.idHotel = parametros.idHotel;
             Servicios.find({servicio: parametros.servicio}
