@@ -5,12 +5,21 @@ const Room = require('../models/room.model');
 
 function ObtenerRooms (req, res) {
 
-    Room.find((err, roomsObtenidos) => {
+    var idHotel = req.params.idHotel;
+
+    Room.find({idHotel: idHotel}, (err, roomsObtenidos)=>{
+        if(err) return res.status(500).send({ mensaje: "Error en la peticion"});
+        if(!roomsObtenidos) return res.status(404).send({mensaje : "Error, no se encuentran habitaciones en dicho Hotel."});
+
+        return res.status(200).send({rooms: roomsObtenidos});
+    }).populate('idHotel')
+
+   /* Room.find((err, roomsObtenidos) => {
         
         if (err) return res.send({ mensaje: "Error: " + err })
 
         return res.send({ rooms: roomsObtenidos })
-    })
+    })*/
 }
 
 function ObtenerRoomId(req, res){
