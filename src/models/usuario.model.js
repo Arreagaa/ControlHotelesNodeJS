@@ -7,7 +7,8 @@ var usuarioSchema = Schema ({
     password: String,
     direccion: String,
     pais: String,
-    rol: String
+    rol: String,
+    idHotel:{type:Schema.Types.ObjectId, ref:'hoteles'}
 });
 
 module.exports = mongoose.model('usuarios', usuarioSchema);

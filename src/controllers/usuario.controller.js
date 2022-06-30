@@ -85,6 +85,7 @@ function registrarCliente(req, res){
         usuariosModel.direccion = parametros.direccion;
         usuariosModel.pais = parametros.pais;
         usuariosModel.rol = 'ROL_CLIENTE';
+        usuarioModel.idHotel = parametros.idHotel;
             Usuarios.find({nombre: parametros.nombre}
                 ,(err, usuarioGuardado)=>{
                 if(usuarioGuardado.length == 0){
@@ -134,7 +135,7 @@ function EliminarClientePerfil(req, res){
 }
 
 /*ADMINISTRACION CLIENTES*/
-//EDITAR ROL DEL USUARIO
+//EDITAR ROL Y TRABAJO DEL USUARIO
 function EditarClienteRol(req, res){
     var idUsuario = req.params.idUsuario;
     var paramentros = req.body;

@@ -1,16 +1,42 @@
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
 const Eventos = require('../models/evento.model');
+const Usuario = require('../models/usuario.model')
 
 
 function ObtenerEventos (req, res) {
 
-    Eventos.find((err, eventosObtenidos) => {
+    /*Eventos.find((err, eventosObtenidos) => {
         
         if (err) return res.send({ mensaje: "Error: " + err })
 
         return res.send({ eventos: eventosObtenidos })
-    })
+    })*/
+
+    var idHotel = req.params.idHotel;
+
+    if(req.user.rol == 'ROL_CLIENTE'){
+        
+        Eventos.find({idHotel: idHotel}, (err, eventosObtenidos)=>{
+            if(err) return res.status(500).send({ mensaje: "Error en la peticion"});
+            if(!eventosObtenidos) return res.status(404).send({mensaje : "Error, no se encuentran habitaciones en dicho Hotel."});
+
+            return res.status(200).send({eventos: eventosObtenidos});
+        }).populate('idHotel')
+
+    }else if(req.user.rol == 'ROL_HOTEL'){
+        Usuario.findById({_id: req.user.sub}, (err, usuarioEncontrado)=>{
+            if (err) return res.status(400).send({ message: 'idUsuario Encontrado' });
+            if (!usuarioEncontrado) return res.status(400).send({ message: 'No se encontro ningun usuario con ese id.' })
+
+            Eventos.find({idHotel: usuarioEncontrado.idHotel}, (err, eventosObtenidos)=>{
+                if(err) return res.status(500).send({ mensaje: "Error en la peticion el id"});
+                if(!eventosObtenidos) return res.status(404).send({mensaje : "Error, no se encuentran habitaciones en dicho Hotel."});
+        
+                return res.status(200).send({eventos: eventosObtenidos});
+            })
+        })
+    }
 }
 
 function ObtenerEventolId(req, res){

@@ -7,7 +7,7 @@ const md_roles = require('../middlewares/roles');
 //ini
 var api = express.Router();
 
-api.get('/obtenerServicios',servicioController.ObtenerServicios);
+api.get('/obtenerServicios/:idHotel?',md_autentificacion.Auth,servicioController.ObtenerServicios);
 api.get('/obtenerServicioId/:idServicio',md_autentificacion.Auth,servicioController.ObtenerServicioId);
 api.post('/agregarServicio', [md_autentificacion.Auth,md_roles.verHotel],servicioController.agregarServicio);
 api.put('/editarServicio/:idServicio',[md_autentificacion.Auth, md_roles.verHotel],servicioController.editarServicio);

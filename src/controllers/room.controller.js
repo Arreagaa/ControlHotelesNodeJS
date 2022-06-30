@@ -1,25 +1,34 @@
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
 const Room = require('../models/room.model');
+const Usuario = require('../models/usuario.model')
 
 
 function ObtenerRooms (req, res) {
-
     var idHotel = req.params.idHotel;
 
-    Room.find({idHotel: idHotel}, (err, roomsObtenidos)=>{
-        if(err) return res.status(500).send({ mensaje: "Error en la peticion"});
-        if(!roomsObtenidos) return res.status(404).send({mensaje : "Error, no se encuentran habitaciones en dicho Hotel."});
-
-        return res.status(200).send({rooms: roomsObtenidos});
-    }).populate('idHotel')
-
-   /* Room.find((err, roomsObtenidos) => {
+    if(req.user.rol == 'ROL_CLIENTE'){
         
-        if (err) return res.send({ mensaje: "Error: " + err })
+        Room.find({idHotel: idHotel}, (err, roomsObtenidos)=>{
+            if(err) return res.status(500).send({ mensaje: "Error en la peticion"});
+            if(!roomsObtenidos) return res.status(404).send({mensaje : "Error, no se encuentran habitaciones en dicho Hotel."});
 
-        return res.send({ rooms: roomsObtenidos })
-    })*/
+            return res.status(200).send({rooms: roomsObtenidos});
+        }).populate('idHotel')
+
+    }else if(req.user.rol == 'ROL_HOTEL'){
+        Usuario.findById({_id: req.user.sub}, (err, usuarioEncontrado)=>{
+            if (err) return res.status(400).send({ message: 'idUsuario Encontrado' });
+            if (!usuarioEncontrado) return res.status(400).send({ message: 'No se encontro ningun usuario con ese id.' })
+
+            Room.find({idHotel: usuarioEncontrado.idHotel}, (err, roomsObtenidos)=>{
+                if(err) return res.status(500).send({ mensaje: "Error en la peticion el id"});
+                if(!roomsObtenidos) return res.status(404).send({mensaje : "Error, no se encuentran habitaciones en dicho Hotel."});
+        
+                return res.status(200).send({rooms: roomsObtenidos});
+            })
+        })
+    }
 }
 
 function ObtenerRoomId(req, res){

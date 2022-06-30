@@ -1,16 +1,41 @@
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
 const Servicios = require('../models/servicio.model');
-
+const Usuario = require('../models/usuario.model')
 
 function ObtenerServicios (req, res) {
 
-    Servicios.find((err, serviciosObtenidos) => {
+   /* Servicios.find((err, serviciosObtenidos) => {
         
         if (err) return res.send({ mensaje: "Error: " + err })
 
         return res.send({ servicios: serviciosObtenidos })
-    })
+    })*/
+
+    var idHotel = req.params.idHotel;
+
+    if(req.user.rol == 'ROL_CLIENTE'){
+        
+        Servicios.find({idHotel: idHotel}, (err, serviciosObtenidos)=>{
+            if(err) return res.status(500).send({ mensaje: "Error en la peticion"});
+            if(!serviciosObtenidos) return res.status(404).send({mensaje : "Error, no se encuentran habitaciones en dicho Hotel."});
+
+            return res.status(200).send({servicios: serviciosObtenidos});
+        }).populate('idHotel')
+
+    }else if(req.user.rol == 'ROL_HOTEL'){
+        Usuario.findById({_id: req.user.sub}, (err, usuarioEncontrado)=>{
+            if (err) return res.status(400).send({ message: 'idUsuario Encontrado' });
+            if (!usuarioEncontrado) return res.status(400).send({ message: 'No se encontro ningun usuario con ese id.' })
+
+            Servicios.find({idHotel: usuarioEncontrado.idHotel}, (err, serviciosObtenidos)=>{
+                if(err) return res.status(500).send({ mensaje: "Error en la peticion el id"});
+                if(!serviciosObtenidos) return res.status(404).send({mensaje : "Error, no se encuentran habitaciones en dicho Hotel."});
+        
+                return res.status(200).send({servicios: serviciosObtenidos});
+            })
+        })
+    }
 }
 
 function ObtenerServicioId(req, res){

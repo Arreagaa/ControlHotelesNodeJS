@@ -7,7 +7,7 @@ const md_roles = require('../middlewares/roles');
 //ini
 var api = express.Router();
 
-api.get('/obtenerRooms/:idHotel?',roomController.ObtenerRooms);
+api.get('/obtenerRooms/:idHotel?',md_autentificacion.Auth, roomController.ObtenerRooms);
 api.get('/obtenerRoomId/:idRoom',md_autentificacion.Auth,roomController.ObtenerRoomId);
 api.post('/agregarRoom', [md_autentificacion.Auth,md_roles.verHotel],roomController.agregarRoom);
 api.put('/editarRoom/:idRoom',[md_autentificacion.Auth, md_roles.verHotel],roomController.editarRoom);
