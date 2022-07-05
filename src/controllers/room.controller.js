@@ -46,11 +46,11 @@ function agregarRoom(req, res){
     var parametros = req.body;
     var roomModel = new Room();
   
-    if(parametros.nombreRoom, parametros.tipo, parametros.precio, parametros.disponibilidad){
+    if(parametros.nombreRoom, parametros.tipo, parametros.precio){
         roomModel.nombreRoom = parametros.nombreRoom;
         roomModel.tipo = parametros.tipo;
         roomModel.precio = parametros.precio;
-        roomModel.disponibilidad = parametros.disponibilidad;
+        roomModel.disponibilidad = true;
         roomModel.idHotel = parametros.idHotel;
             Room.find({nombreRoom: parametros.nombreRoom}
                 ,(err, roomGuardado)=>{
