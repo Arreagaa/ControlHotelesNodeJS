@@ -9,6 +9,7 @@ const HotelesRutas = require('./src/routes/hotel.routes');
 const RoomRutas = require('./src/routes/room.routes');
 const EventoRutas = require('./src/routes/evento.routes');
 const ServicioRutas = require('./src/routes/servicio.routes');
+const ReservacionRutas = require('./src/routes/reservacion.routes');
 
 // MIDDLEWARES -> INTERMEDIARIOS
 app.use(express.urlencoded({ extended: false }));
@@ -18,6 +19,6 @@ app.use(express.json());
 app.use(cors());
 
 // CARGA DE RUTAS localhost:3000/api/obtenerProductos
-app.use('/api', UsuarioRutas, HotelesRutas, RoomRutas, EventoRutas, ServicioRutas);
+app.use('/api', UsuarioRutas, HotelesRutas, RoomRutas, EventoRutas, ServicioRutas, ReservacionRutas);
 
 module.exports = app;
