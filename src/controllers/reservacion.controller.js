@@ -52,7 +52,29 @@ function agregarReservacion(req, res) {
     }
 }
 
+function ObtenerReservaciones (req, res) {
+
+    Reservacion.find((err, reservacionesObtenidas) => {
+        
+        if (err) return res.send({ mensaje: "Error: " + err })
+
+        return res.send({ reservaciones: reservacionesObtenidas })
+    })
+}
+
+function ObtenerReservacionId(req, res){
+    var idReservacion = req.params.idReservacion
+
+    Reservacion.findById(idReservacion,(err,reservacionObtenida)=>{
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+        if (!reservacionObtenida) return res.status(404).send( { mensaje: 'Error al obtener el hotel' });
+
+        return res.status(200).send({ reservaciones: reservacionObtenida });
+    })
+}
 
 module.exports = {
-    agregarReservacion
+    agregarReservacion,
+    ObtenerReservaciones,
+    ObtenerReservacionId
 }

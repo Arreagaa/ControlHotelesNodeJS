@@ -9,4 +9,8 @@ var api = express.Router();
 
 api.post('/reservacion/:idRoom', [md_autentificacion.Auth],reservacionController.agregarReservacion);
 
+api.get('/ObtenerReservaciones',[md_autentificacion.Auth],reservacionController.ObtenerReservaciones);
+
+api.get('/ObtenerReservacionId/:idReservacion',md_autentificacion.Auth,reservacionController.ObtenerReservacionId);
+
 module.exports = api;
