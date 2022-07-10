@@ -13,7 +13,7 @@ function agregarReservacion(req, res) {
     //if(req.user.rol == 'ROL_ADMINISTRADOR') return res.status(500).send({message:'sin permisos admin'});
     //if(req.user.rol == 'ROL_HOTEL') return res.status(500).send({message:'sin permisos hotel'});
 
-    if (parametros.idHotel && parametros.fechaInicio && parametros.totalNoches){
+    if (parametros.idHotel && parametros.fechaInicio ){
         Room.findOne({_id:idRoom}, (err, result)=>{
             if (err || result === null) return res.status(500).send({message: "habitacion inexistente"})
             reservacionModel.idHotel = parametros.idHotel;
@@ -31,8 +31,8 @@ function agregarReservacion(req, res) {
                     Room.findOne({_id:idRoom}, (err, roomEncontrado)=>{
                         registroModel.idUsuario = req.user.sub;
                         registroModel.nombreCompra = roomEncontrado.nombreRoom;
-                        //registroModel.cantidad = roomEncontrado.cantidad;
-                        registroModel.precio = roomEncontrado.precio;
+                        registroModel.cantidad = reservacionGuardada.totalNoches;
+                        registroModel.precio = roomEncontrado.precio*reservacionGuardada.totalNoches;
                         registroModel.save((err, registroGuardado)=>{
                             if(err) return res.status(500).send({message: "error en la peticion"});
                             if(!registroGuardado) return res.status(404).send({message: "no se guardo el registro"});
