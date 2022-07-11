@@ -13,4 +13,6 @@ api.get('/ObtenerReservaciones',[md_autentificacion.Auth],reservacionController.
 
 api.get('/ObtenerReservacionId/:idReservacion',md_autentificacion.Auth,reservacionController.ObtenerReservacionId);
 
+api.get('/obtenerReservacionesHotel/:idHotel?',md_autentificacion.Auth,reservacionController.obtenerReservacionesHotel);
+
 module.exports = api;

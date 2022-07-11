@@ -4,6 +4,7 @@ const Reservacion = require('../models/reservacion.model');
 const Usuario = require('../models/usuario.model');
 const Room = require('../models/room.model');
 const Registro = require('../models/registro.model');
+const Hotel = require('../models/hotel.model');
 
 function agregarReservacion(req, res) {
     var parametros = req.body;
@@ -73,8 +74,35 @@ function ObtenerReservacionId(req, res){
     })
 }
 
+function obtenerReservacionesHotel(req, res) {
+    var idHotel = req.params.idHotel;
+
+    /*Hotel.find({ _id: idHotel, idUsuario: req.user.rol }, (err, hotelesEncontrados) => {
+        if (err) return res.status(500).send({ message: 'Error en la petición' });
+        if (!hotelesEncontrados) return res.status(404).send({ message: 'No trabaja en el Hotel'});
+
+        Reservacion.find({ idHotel: idHotel }, (err, reservacionesEncontradas) => {
+            if (err) return res.status(500).send({ message: 'Error en la petición' });
+            if (!reservacionesEncontradas) return res.status(404).send({ message: 'No cuenta con reservaciones' });
+            return res.status(200).send({ reservaciones: reservacionesEncontradas });
+        });
+    });*/
+
+    Usuario.findById({_id: req.user.sub}, (err, usuarioEncontrado)=>{
+        if (err) return res.status(400).send({ message: 'idUsuario Encontrado' });
+        if (!usuarioEncontrado) return res.status(400).send({ message: 'No se encontro ningun usuario con ese id.' })
+
+        Reservacion.find({ idHotel: usuarioEncontrado.idHotel }, (err, reservacionesEncontradas) => {
+            if (err) return res.status(500).send({ message: 'Error en la petición' });
+            if (!reservacionesEncontradas) return res.status(404).send({ message: 'No cuenta con reservaciones' });
+            return res.status(200).send({ reservaciones: reservacionesEncontradas });
+        });
+    })
+}
+
 module.exports = {
     agregarReservacion,
     ObtenerReservaciones,
-    ObtenerReservacionId
+    ObtenerReservacionId,
+    obtenerReservacionesHotel
 }
