@@ -13,6 +13,6 @@ api.post('/agregarEvento', [md_autentificacion.Auth,md_roles.verHotel],eventoCon
 api.put('/editarEvento/:idEvento',[md_autentificacion.Auth, md_roles.verHotel],eventoController.editarEvento);
 api.delete('/eliminarEvento/:idEvento', [md_autentificacion.Auth,md_roles.verHotel],eventoController.eliminarEvento);
 
-api.post('/comprarEvento/:idEvento', [md_autentificacion.Auth],eventoController.comprarEvento);
+api.post('/comprarEvento/:idEvento?', [md_autentificacion.Auth],eventoController.comprarEvento);
 
 module.exports = api;

@@ -13,6 +13,6 @@ api.post('/agregarServicio', [md_autentificacion.Auth,md_roles.verHotel],servici
 api.put('/editarServicio/:idServicio',[md_autentificacion.Auth, md_roles.verHotel],servicioController.editarServicio);
 api.delete('/eliminarServicio/:idServicio', [md_autentificacion.Auth,md_roles.verHotel],servicioController.eliminarServicio);
 
-api.post('/comprarServicio/:idServicio', [md_autentificacion.Auth],servicioController.comprarServicio);
+api.post('/comprarServicio/:idServicio?', [md_autentificacion.Auth],servicioController.comprarServicio);
 
 module.exports = api;
