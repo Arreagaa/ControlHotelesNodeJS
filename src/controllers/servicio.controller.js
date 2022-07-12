@@ -46,12 +46,16 @@ function ObtenerServicioId(req, res){
 function agregarServicio(req, res){
     var parametros = req.body;
     var servicioModel = new Servicios();
+
+    Usuario.findById({_id: req.user.sub}, (err, usuarioEncontrado)=>{
+        if (err) return res.status(400).send({ message: 'idUsuario Encontrado' });
+        if (!usuarioEncontrado) return res.status(400).send({ message: 'No se encontro ningun usuario con ese id.' })
   
     if(parametros.servicio, parametros.precio){
         servicioModel.servicio = parametros.servicio;
         servicioModel.precio = parametros.precio;
         servicioModel.disponibilidad = true;
-        servicioModel.idHotel = parametros.idHotel;
+        servicioModel.idHotel = usuarioEncontrado.idHotel;
             Servicios.find({servicio: parametros.servicio}
                 ,(err, servicioGuardado)=>{
                 if(servicioGuardado.length == 0){
@@ -68,6 +72,7 @@ function agregarServicio(req, res){
         }else{
             return res.status(500).send({ mensaje: 'Error en la peticion agregar' });
         }
+    })
 }
 
 function editarServicio(req, res){

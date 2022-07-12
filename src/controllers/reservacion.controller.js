@@ -6,6 +6,10 @@ const Room = require('../models/room.model');
 const Registro = require('../models/registro.model');
 const Hotel = require('../models/hotel.model');
 
+//PDF
+const fs = require('fs');
+const Pdfmake = require('pdfmake');
+
 function agregarReservacion(req, res) {
     var parametros = req.body;
     var reservacionModel = new Reservacion();
@@ -90,9 +94,76 @@ function obtenerReservacionesHotel(req, res) {
     })
 }
 
+//PDF
+function reservacionesHotel(req, res) {
+    //const usuarioLogueado = req.user.sub;
+    var idHotel = req.params.idHotel;
+
+    Usuario.findById({_id: req.user.sub}, (err, usuarioEncontrado)=>{
+        if (err) return res.status(400).send({ message: 'idUsuario Encontrado' });
+        if (!usuarioEncontrado) return res.status(400).send({ message: 'No se encontro ningun usuario con ese id.' })
+
+        Reservacion.find({ idHotel: usuarioEncontrado.idHotel }, (err, reservacionesEncontradas) => {
+            if (err) return res.status(500).send({ message: 'Error en la petición' });
+            if (!reservacionesEncontradas) return res.status(404).send({ message: 'No cuenta con reservaciones' });
+            //return res.status(200).send({ reservaciones: reservacionesEncontradas });
+      
+    
+
+    var fonts = {
+        Roboto: {
+            normal: './fonts/Roboto/Roboto-Regular.ttf',
+            bold: './fonts/Roboto/Roboto-Medium.ttf',
+            italics: './fonts/Roboto/Roboto-Italic.ttf',
+            bolditalics: './fonts/Roboto/Roboto-MediumItalic.ttf'
+        }
+    };
+    let pdfmake = new Pdfmake(fonts);
+    let content = [{
+        text: 'Reporte De Reservaciones', alignment:'center', fontSize:20, decoration:'underline', color:'#6793F4', bold:true
+    }]
+
+    for (let i=0; i < reservacionesEncontradas.length ; i++) {
+        //let empleadoNum = i + 1;
+        content.push({
+            text:' '
+        })
+        content.push({
+            text:'Identificación de la Habitación: '+  reservacionesEncontradas[i].idRoom
+        })
+        content.push({
+            text:'Inicia su Hospedaje: '+  reservacionesEncontradas[i].fechaInicio
+        })
+        content.push({
+            text:'Se Hospeda por: '+  reservacionesEncontradas[i].totalNoches + 'noches.'
+        })
+        content.push({
+            text:' '
+        })
+        content.push({
+            text:'Identificación del Cliente: '+  reservacionesEncontradas[i].idUsuario
+        })
+    }
+
+    let docDefinition = {
+        content: content,
+        background: function(){
+            return {canvas: [{type:'rect', x: 500, y: 32, w:170, h: 765, color: '#E6E6FA'}]
+            }
+        }	
+    }
+
+    let documentPDF = pdfmake.createPdfKitDocument(docDefinition, {});
+    documentPDF.pipe(fs.createWriteStream('reservasReporte.pdf'));
+    documentPDF.end();
+    return res.status(200).send({mensaje:'El reporte de reservas ya fue creado'});    
+})  })
+}
+
 module.exports = {
     agregarReservacion,
     ObtenerReservaciones,
     ObtenerReservacionId,
-    obtenerReservacionesHotel
+    obtenerReservacionesHotel,
+    reservacionesHotel
 }

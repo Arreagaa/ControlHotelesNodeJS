@@ -54,13 +54,18 @@ function ObtenerEventolId(req, res){
 function agregarEvento(req, res){
     var parametros = req.body;
     var eventoModel = new Eventos();
+
+    Usuario.findById({_id: req.user.sub}, (err, usuarioEncontrado)=>{
+        if (err) return res.status(400).send({ message: 'idUsuario Encontrado' });
+        if (!usuarioEncontrado) return res.status(400).send({ message: 'No se encontro ningun usuario con ese id.' })
+  
   
     if(parametros.evento, parametros.descripcion){
         eventoModel.evento = parametros.evento;
         eventoModel.descripcion = parametros.descripcion;
         eventoModel.precio = parametros.precio;
         eventoModel.disponibilidad = true;
-        eventoModel.idHotel = parametros.idHotel;
+        eventoModel.idHotel = usuarioEncontrado.idHotel;
             Eventos.find({evento: parametros.evento}
                 ,(err, eventoGuardado)=>{
                 if(eventoGuardado.length == 0){
@@ -77,6 +82,7 @@ function agregarEvento(req, res){
         }else{
             return res.status(500).send({ mensaje: 'Error en la peticion agregar' });
         }
+        })
 }
 
 function editarEvento(req, res){

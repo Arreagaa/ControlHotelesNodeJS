@@ -46,12 +46,16 @@ function agregarRoom(req, res){
     var parametros = req.body;
     var roomModel = new Room();
   
+    Usuario.findById({_id: req.user.sub}, (err, usuarioEncontrado)=>{
+        if (err) return res.status(400).send({ message: 'idUsuario Encontrado' });
+        if (!usuarioEncontrado) return res.status(400).send({ message: 'No se encontro ningun usuario con ese id.' })
+
     if(parametros.nombreRoom, parametros.tipo, parametros.precio){
         roomModel.nombreRoom = parametros.nombreRoom;
         roomModel.tipo = parametros.tipo;
         roomModel.precio = parametros.precio;
         roomModel.disponibilidad = true;
-        roomModel.idHotel = parametros.idHotel;
+        roomModel.idHotel = usuarioEncontrado.idHotel;
             Room.find({nombreRoom: parametros.nombreRoom}
                 ,(err, roomGuardado)=>{
                 if(roomGuardado.length == 0){
@@ -68,6 +72,7 @@ function agregarRoom(req, res){
         }else{
             return res.status(500).send({ mensaje: 'Error en la peticion agregar' });
         }
+    })
 }
 
 function editarRoom(req, res){

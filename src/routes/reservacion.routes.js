@@ -15,4 +15,7 @@ api.get('/ObtenerReservacionId/:idReservacion?',md_autentificacion.Auth,reservac
 
 api.get('/obtenerReservacionesHotel/:idHotel?',md_autentificacion.Auth,reservacionController.obtenerReservacionesHotel);
 
+//PDF
+api.get('/makePDF',md_autentificacion.Auth, reservacionController.reservacionesHotel);
+
 module.exports = api;
