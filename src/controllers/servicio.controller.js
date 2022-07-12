@@ -1,16 +1,10 @@
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
 const Servicios = require('../models/servicio.model');
-const Usuario = require('../models/usuario.model')
+const Usuario = require('../models/usuario.model');
+const Registro = require('../models/registro.model');
 
 function ObtenerServicios (req, res) {
-
-   /* Servicios.find((err, serviciosObtenidos) => {
-        
-        if (err) return res.send({ mensaje: "Error: " + err })
-
-        return res.send({ servicios: serviciosObtenidos })
-    })*/
 
     var idHotel = req.params.idHotel;
 
@@ -56,6 +50,7 @@ function agregarServicio(req, res){
     if(parametros.servicio, parametros.precio){
         servicioModel.servicio = parametros.servicio;
         servicioModel.precio = parametros.precio;
+        servicioModel.disponibilidad = true;
         servicioModel.idHotel = parametros.idHotel;
             Servicios.find({servicio: parametros.servicio}
                 ,(err, servicioGuardado)=>{
@@ -100,6 +95,43 @@ function eliminarServicio(req, res){
         })
 }
 
+function comprarServicio (req, res) {
+    var idServicio = req.params.idServicio;
+    var registroModel = new Registro();
+
+    Servicios.findOne({_id: idServicio}, (err, servicioExistente)=>{
+        if (err || servicioExistente === null) return res.status(500).send({message: "Servicio inexistente"});
+        Registro.findOne({nombreCompra: servicioExistente.servicio}, (err, servicioEncontrado)=>{
+            if (err) return res.status(500).send({message: "error en la peticion"});
+            if (servicioEncontrado){
+                Registro.findOneAndUpdate({ nombreCompra: servicioExistente.servicio, idUsuario: req.user.sub}, {
+                    $inc: {cantidad: 1}
+                },
+                    { new: true}, (err, registroModificado)=>{
+                        if (err) return res.status(500).send({message: "error en la peticion"});
+                        if (!registroModificado) return res.status(404).send({message: "No se encontro nada para modificar"})
+                    })
+            }else{
+                Servicios.findOneAndUpdate({_id: idServicio}, {disponibilidad: false}, {new:true}, (err, servicioEncontrado)=>{
+                    if (err) return res.status(500).send({message: "error en la peticion"});
+                    if (!servicioEncontrado) return res.status(404).send({message: "No se guardaron los datos"});
+
+                    registroModel.nombreCompra = servicioExistente.nombreServicio;
+                    registroModel.precio = servicioExistente.precio;
+                    registroModel.cantidad = 1;
+                    registroModel.idUsuario = req.user.sub;
+                    registroModel.save((err, servicioRegistrado)=>{
+                        if (err) return res.status(500).send({message: "error en la peticion"});
+                        if (!servicioRegistrado) return res.status(404).send({message: "No se guardaron los datos"});
+                        return res.status(200).send({servicios: servicioRegistrado});
+
+                    })
+                })
+            }
+        })
+    })
+}
+
 
 module.exports = {
     agregarServicio,
@@ -107,4 +139,5 @@ module.exports = {
     eliminarServicio,
     ObtenerServicios,
     ObtenerServicioId,
+    comprarServicio
 }
