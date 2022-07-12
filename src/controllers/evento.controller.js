@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt-nodejs');
 const jwt = require('../services/jwt');
 const Eventos = require('../models/evento.model');
-const Usuario = require('../models/usuario.model')
+const Usuario = require('../models/usuario.model');
+const Registro = require('../models/registro.model');
 
 
 function ObtenerEventos (req, res) {
@@ -58,6 +59,7 @@ function agregarEvento(req, res){
         eventoModel.evento = parametros.evento;
         eventoModel.descripcion = parametros.descripcion;
         eventoModel.precio = parametros.precio;
+        eventoModel.disponibilidad = true;
         eventoModel.idHotel = parametros.idHotel;
             Eventos.find({evento: parametros.evento}
                 ,(err, eventoGuardado)=>{
@@ -102,6 +104,43 @@ function eliminarEvento(req, res){
         })
 }
 
+function comprarEvento (req, res) {
+    var idEvento = req.params.idEvento;
+    var registroModel = new Registro();
+
+    Eventos.findOne({_id: idEvento}, (err, eventoExistente)=>{
+        if (err || eventoExistente === null) return res.status(500).send({message: "Servicio inexistente"});
+        Registro.findOne({nombreCompra: eventoExistente.evento}, (err, eventoEncontrado)=>{
+            if (err) return res.status(500).send({message: "error en la peticion"});
+            if (eventoEncontrado){
+                Registro.findOneAndUpdate({ nombreCompra: eventoExistente.evento, idUsuario: req.user.sub}, {
+                    $inc: {cantidad: 1}
+                },
+                    { new: true}, (err, registroModificado)=>{
+                        if (err) return res.status(500).send({message: "error en la peticion"});
+                        if (!registroModificado) return res.status(404).send({message: "No se encontro nada para modificar"})
+                    })
+            }else{
+                Eventos.findOneAndUpdate({_id: idEvento}, {disponibilidad: false}, {new:true}, (err, eventoEncontrado)=>{
+                    if (err) return res.status(500).send({message: "error en la peticion"});
+                    if (!eventoEncontrado) return res.status(404).send({message: "No se guardaron los datos"});
+
+                    registroModel.nombreCompra = eventoExistente.evento;
+                    registroModel.precio = eventoExistente.precio;
+                    registroModel.cantidad = 1;
+                    registroModel.idUsuario = req.user.sub;
+                    registroModel.save((err, eventoRegistrado)=>{
+                        if (err) return res.status(500).send({message: "error en la peticion"});
+                        if (!eventoRegistrado) return res.status(404).send({message: "No se guardaron los datos"});
+                        return res.status(200).send({eventos: eventoRegistrado});
+
+                    })
+                })
+            }
+        })
+    })
+}
+
 
 module.exports = {
     agregarEvento,
@@ -109,4 +148,5 @@ module.exports = {
     eliminarEvento,
     ObtenerEventos,
     ObtenerEventolId,
+    comprarEvento
 }

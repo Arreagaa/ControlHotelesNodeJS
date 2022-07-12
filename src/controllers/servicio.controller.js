@@ -116,7 +116,7 @@ function comprarServicio (req, res) {
                     if (err) return res.status(500).send({message: "error en la peticion"});
                     if (!servicioEncontrado) return res.status(404).send({message: "No se guardaron los datos"});
 
-                    registroModel.nombreCompra = servicioExistente.nombreServicio;
+                    registroModel.nombreCompra = servicioExistente.servicio;
                     registroModel.precio = servicioExistente.precio;
                     registroModel.cantidad = 1;
                     registroModel.idUsuario = req.user.sub;
