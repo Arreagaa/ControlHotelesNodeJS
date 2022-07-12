@@ -11,11 +11,10 @@ function agregarReservacion(req, res) {
     var reservacionModel = new Reservacion();
     var registroModel = new Registro();
     var idRoom = req.params.idRoom;
-    //if(req.user.rol == 'ROL_ADMINISTRADOR') return res.status(500).send({message:'sin permisos admin'});
-    //if(req.user.rol == 'ROL_HOTEL') return res.status(500).send({message:'sin permisos hotel'});
 
-    if (parametros.idHotel && parametros.fechaInicio ){
+    if (parametros.fechaInicio && parametros.totalNoches){
         Room.findOne({_id:idRoom}, (err, result)=>{
+            console.log(idRoom);
             if (err || result === null) return res.status(500).send({message: "habitacion inexistente"})
             reservacionModel.idHotel = parametros.idHotel;
             reservacionModel.idRoom = idRoom;
@@ -23,10 +22,12 @@ function agregarReservacion(req, res) {
             reservacionModel.fechaInicio = parametros.fechaInicio;
             reservacionModel.totalNoches = parametros.totalNoches;
             reservacionModel.save((err, reservacionGuardada) =>{
-                if(err) return res.status(500).send({message: "error en la peticion"});
+                console.log(reservacionModel);
+                console.log(parametros.idHotel);
+                if(err) return res.status(500).send({message: "Error en la peticion reservacionModel"});
                 if(!reservacionGuardada) return res.status(404).send({message: "no se guardo la reservacion"});
                 Room.findByIdAndUpdate({_id: idRoom},{ disponibilidad: false},{new:true}, (err, roomGuardado)=>{
-                    if(err) return res.status(500).send({message: "error en la peticion"});
+                    if(err) return res.status(500).send({message: "Error en la peticion roomGuardado"});
                     if(!roomGuardado) return res.status(404).send({message: "no se guardo la habitacion editada"});
 
                     Room.findOne({_id:idRoom}, (err, roomEncontrado)=>{
@@ -35,7 +36,7 @@ function agregarReservacion(req, res) {
                         registroModel.cantidad = reservacionGuardada.totalNoches;
                         registroModel.precio = roomEncontrado.precio*reservacionGuardada.totalNoches;
                         registroModel.save((err, registroGuardado)=>{
-                            if(err) return res.status(500).send({message: "error en la peticion"});
+                            if(err) return res.status(500).send({message: "Error en la peticion registroModel"});
                             if(!registroGuardado) return res.status(404).send({message: "no se guardo el registro"});
 
                             return res.status(200).send({reservacion: reservacionGuardada})
@@ -64,10 +65,10 @@ function ObtenerReservaciones (req, res) {
 }
 
 function ObtenerReservacionId(req, res){
-    var idReservacion = req.params.idReservacion
+    var idReservacion = req.params.idReservacion;
 
     Reservacion.findById(idReservacion,(err,reservacionObtenida)=>{
-        if (err) return res.status(500).send({ mensaje: 'Error en la peticion' });
+        if (err) return res.status(500).send({ mensaje: 'Error en la peticion de Reserva por Id' });
         if (!reservacionObtenida) return res.status(404).send( { mensaje: 'Error al obtener el hotel' });
 
         return res.status(200).send({ reservaciones: reservacionObtenida });
@@ -76,17 +77,6 @@ function ObtenerReservacionId(req, res){
 
 function obtenerReservacionesHotel(req, res) {
     var idHotel = req.params.idHotel;
-
-    /*Hotel.find({ _id: idHotel, idUsuario: req.user.rol }, (err, hotelesEncontrados) => {
-        if (err) return res.status(500).send({ message: 'Error en la petición' });
-        if (!hotelesEncontrados) return res.status(404).send({ message: 'No trabaja en el Hotel'});
-
-        Reservacion.find({ idHotel: idHotel }, (err, reservacionesEncontradas) => {
-            if (err) return res.status(500).send({ message: 'Error en la petición' });
-            if (!reservacionesEncontradas) return res.status(404).send({ message: 'No cuenta con reservaciones' });
-            return res.status(200).send({ reservaciones: reservacionesEncontradas });
-        });
-    });*/
 
     Usuario.findById({_id: req.user.sub}, (err, usuarioEncontrado)=>{
         if (err) return res.status(400).send({ message: 'idUsuario Encontrado' });
