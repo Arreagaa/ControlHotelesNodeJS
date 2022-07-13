@@ -1,7 +1,10 @@
+require('dotenv').config();
+
 UsuarioController = require('./src/controllers/usuario.controller');
 const mongoose = require('mongoose');
 const app = require('./app');
-require('dotenv').config();
+
+console.log(process.env);
 
 //const PORT = process.env.PORT || 3000;
 
