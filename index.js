@@ -3,13 +3,13 @@ const mongoose = require('mongoose');
 const app = require('./app');
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3000;
+//const PORT = process.env.PORT || 3000;
 
 mongoose.Promise = global.Promise;                                                                
 mongoose.connect(process.env.CONTROL_HOTELES, { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
     console.log("Se encuentra conectado a la base de datos.");
 
-    app.listen(PORT, function () {
+    app.listen(process.env.PORT || 3000, function () {
         console.log('Corriendo en el puerto 3000')
     })
     
