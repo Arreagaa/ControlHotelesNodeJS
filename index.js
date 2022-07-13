@@ -4,7 +4,7 @@ const app = require('./app');
 require('dotenv').config();
 
 mongoose.Promise = global.Promise;                                                                
-mongoose.connect(process.env.CONTROL_HOTELES, { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
+mongoose.connect('mongodb+srv://grupo7:arreaga1@grupo7.b3ep0uj.mongodb.net/?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true }).then(()=>{
     console.log("Se encuentra conectado a la base de datos.");
 
     app.listen(process.env.PORT || 3000, function () {
