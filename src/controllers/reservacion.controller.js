@@ -156,8 +156,8 @@ function reservacionesHotel(req, res) {
     }
 
     let documentPDF = pdfmake.createPdfKitDocument(docDefinition, {});
-    //documentPDF.pipe(fs.createWriteStream('Descargas/reservasReporte.pdf'));
-    documentPDF.save(fs.createWriteStream('reservasReporte.pdf'));
+    documentPDF.pipe(fs.createWriteStream('reservasReporte.pdf'));
+    //documentPDF.save(fs.createWriteStream('reservasReporte.pdf'));
     documentPDF.end();
     return res.status(200).send({mensaje:'El reporte de reservas ya fue creado'});    
 })  })
