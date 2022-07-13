@@ -120,35 +120,37 @@ function reservacionesHotel(req, res) {
     };
     let pdfmake = new Pdfmake(fonts);
     let content = [{
-        text: 'Reporte De Reservaciones', alignment:'center', fontSize:20, decoration:'underline', color:'#6793F4', bold:true
+        text: 'Reporte De Reservaciones', alignment:'center', fontSize:20, color:'#6793F4', bold:true, marginBottom: 40
     }]
 
     for (let i=0; i < reservacionesEncontradas.length ; i++) {
-        //let empleadoNum = i + 1;
+        content.push({
+            text:'Identificación de la Habitación: '+  reservacionesEncontradas[i].idRoom, alignment:'center'
+        })
+        content.push({
+            text:' ', 
+        })
+        content.push({
+            text:'Inicia su Hospedaje: '+  reservacionesEncontradas[i].fechaInicio, alignment:'center'
+        })
+        content.push({
+            text:'Se Hospeda por: '+  reservacionesEncontradas[i].totalNoches + ' noches', alignment:'center'
+        })
+        content.push({
+            text:'Cliente ID: '+  reservacionesEncontradas[i].idUsuario, alignment:'center'
+        })
         content.push({
             text:' '
         })
         content.push({
-            text:'Identificación de la Habitación: '+  reservacionesEncontradas[i].idRoom
-        })
-        content.push({
-            text:'Inicia su Hospedaje: '+  reservacionesEncontradas[i].fechaInicio
-        })
-        content.push({
-            text:'Se Hospeda por: '+  reservacionesEncontradas[i].totalNoches + 'noches.'
-        })
-        content.push({
             text:' '
-        })
-        content.push({
-            text:'Identificación del Cliente: '+  reservacionesEncontradas[i].idUsuario
         })
     }
 
     let docDefinition = {
         content: content,
         background: function(){
-            return {canvas: [{type:'rect', x: 500, y: 32, w:170, h: 765, color: '#E6E6FA'}]
+            return {canvas: [{type:'rect', x: 570, y: 0, w:35, h: 840, color: '#37517e'}]
             }
         }	
     }
